@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 
 import pickle # Serialiser des objets (y comporis des modeles)
@@ -25,20 +26,24 @@ nltk.download('stopwords')
 
 st.cache(persist=True)
 def getVectorizer(url):
-    gdown.download(
-        url,
-        str(VECTORIZERS_PATH / "tfidf_vectorizer.pkl"))
+    target = str(VECTORIZERS_PATH / "tfidf_vectorizer.pkl")
+    if not os.path.exists(target):
+        gdown.download(
+            url,
+            target)
     # Restaurer le TFIDFVectorizer
-    vectorizer = pickle.load(open(str(VECTORIZERS_PATH / "tfidf_vectorizer.pkl"), mode='rb'))
+    vectorizer = pickle.load(open(target, mode='rb'))
     return vectorizer
 
 st.cache(persist=True)
 def getModel(url):
-    gdown.download(
-        url,
-        str(MODELS_PATH / "model.pk"))
+    target = str(MODELS_PATH / "model.pk")
+    if not os.path.exists(target):
+        gdown.download(
+            url,
+            target)
     # Restaurer le modèle
-    model = pickle.load(open(str(MODELS_PATH / "model.pk"), mode='rb'))
+    model = pickle.load(open(target, mode='rb'))
     return model
 
 vectorizer = getVectorizer(VECTORIZER_URL)
